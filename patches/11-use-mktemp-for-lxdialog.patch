@@ -1,0 +1,13 @@
+diff --git a/lxdialog/check-lxdialog.sh b/lxdialog/check-lxdialog.sh
+index 5075ebf..3ce0a23 100755
+--- a/lxdialog/check-lxdialog.sh
++++ b/lxdialog/check-lxdialog.sh
+@@ -40,7 +40,7 @@ ccflags()
+ }
+ 
+ # Temp file, try to clean up after us
+-tmp=.lxdialog.tmp
++tmp=$(mktemp)
+ trap "rm -f $tmp" 0 1 2 3 15
+ 
+ # Check if we can link to ncurses

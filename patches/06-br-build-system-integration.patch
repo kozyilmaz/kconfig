@@ -1,0 +1,39 @@
+diff --git a/Makefile b/Makefile
+index ebced77..93165d3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -186,7 +186,15 @@ qconf-cxxobjs	:= qconf.o
+ qconf-objs	:= zconf.tab.o
+ gconf-objs	:= gconf.o zconf.tab.o
+ 
+-hostprogs-y := conf nconf mconf kxgettext qconf gconf
++hostprogs-y := conf nconf mconf kxgettext
++
++ifeq ($(MAKECMDGOALS),qconf)
++	hostprogs-y += qconf
++endif
++
++ifeq ($(MAKECMDGOALS),gconf)
++	hostprogs-y += gconf
++endif
+ 
+ clean-files	:= qconf.moc .tmp_qtcheck .tmp_gtkcheck
+ clean-files	+= zconf.tab.c zconf.lex.c zconf.hash.c gconf.glade.h
+@@ -225,7 +233,7 @@ HOSTLOADLIBES_nconf	= $(shell \
+ 				|| echo "-lmenu -lpanel -lncurses"  )
+ $(obj)/qconf.o: $(obj)/.tmp_qtcheck
+ 
+-ifeq ($(MAKECMDGOALS),xconfig)
++ifeq ($(MAKECMDGOALS),qconf)
+ $(obj)/.tmp_qtcheck: $(src)/Makefile
+ -include $(obj)/.tmp_qtcheck
+ 
+@@ -254,7 +262,7 @@ endif
+ 
+ $(obj)/gconf.o: $(obj)/.tmp_gtkcheck
+ 
+-ifeq ($(MAKECMDGOALS),gconfig)
++ifeq ($(MAKECMDGOALS),gconf)
+ -include $(obj)/.tmp_gtkcheck
+ 
+ # GTK+ needs some extra effort, too...

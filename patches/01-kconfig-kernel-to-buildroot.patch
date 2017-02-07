@@ -1,0 +1,99 @@
+diff --git a/confdata.c b/confdata.c
+index dd243d2..5b29851 100644
+--- a/confdata.c
++++ b/confdata.c
+@@ -30,7 +30,7 @@ static void conf_message(const char *fmt, ...)
+ static const char *conf_filename;
+ static int conf_lineno, conf_warnings, conf_unsaved;
+ 
+-const char conf_defname[] = "arch/$ARCH/defconfig";
++const char conf_defname[] = ".defconfig";
+ 
+ static void conf_warning(const char *fmt, ...)
+ {
+@@ -69,7 +69,7 @@ static void conf_message(const char *fmt, ...)
+ 
+ const char *conf_get_configname(void)
+ {
+-	char *name = getenv("KCONFIG_CONFIG");
++	char *name = getenv("BR2_CONFIG");
+ 
+ 	return name ? name : ".config";
+ }
+diff --git a/gconf.glade b/gconf.glade
+index aa483cb..6cbc1bb 100644
+--- a/gconf.glade
++++ b/gconf.glade
+@@ -4,7 +4,7 @@
+ 
+ <widget class="GtkWindow" id="window1">
+   <property name="visible">True</property>
+-  <property name="title" translatable="yes">Gtk Kernel Configurator</property>
++  <property name="title" translatable="yes">Gtk Buildroot Configurator</property>
+   <property name="type">GTK_WINDOW_TOPLEVEL</property>
+   <property name="window_position">GTK_WIN_POS_NONE</property>
+   <property name="modal">False</property>
+diff --git a/mconf.c b/mconf.c
+index 315ce2c..3a687a7 100644
+--- a/mconf.c
++++ b/mconf.c
+@@ -176,9 +176,9 @@ menu_instructions[] = N_(
+ 	"Arrow keys navigate the menu.  "
+ 	"<Enter> selects submenus ---> (or empty submenus ----).  "
+ 	"Highlighted letters are hotkeys.  "
+-	"Pressing <Y> includes, <N> excludes, <M> modularizes features.  "
++	"Pressing <Y> selectes a feature, while <N> will exclude a feature.  "
+ 	"Press <Esc><Esc> to exit, <?> for Help, </> for Search.  "
+-	"Legend: [*] built-in  [ ] excluded  <M> module  < > module capable"),
++	"Legend: [*] feature is selected  [ ] feature is excluded"),
+ radiolist_instructions[] = N_(
+ 	"Use the arrow keys to navigate this window or "
+ 	"press the hotkey of the item you wish to select "
+@@ -962,7 +962,7 @@ static int handle_exit(void)
+ 	if (conf_get_changed())
+ 		res = dialog_yesno(NULL,
+ 				   _("Do you wish to save your new configuration?\n"
+-				     "(Press <ESC><ESC> to continue kernel configuration.)"),
++				     "(Press <ESC><ESC> to continue Buildroot configuration.)"),
+ 				   6, 60);
+ 	else
+ 		res = -1;
+diff --git a/qconf.cc b/qconf.cc
+index 91b7e6f..af2e49a 100644
+--- a/qconf.cc
++++ b/qconf.cc
+@@ -55,7 +55,7 @@ static inline QString qgettext(const QString& str)
+ }
+ 
+ ConfigSettings::ConfigSettings()
+-	: QSettings("kernel.org", "qconf")
++	: QSettings("buildroot.org", "qconf")
+ {
+ }
+ 
+diff --git a/zconf.tab.c_shipped b/zconf.tab.c_shipped
+index 7a4d658..602c3a4 100644
+--- a/zconf.tab.c_shipped
++++ b/zconf.tab.c_shipped
+@@ -2339,7 +2339,7 @@ void conf_parse(const char *name)
+ 
+ 	sym_init();
+ 	_menu_init();
+-	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
++	rootmenu.prompt = menu_add_prompt(P_MENU, "Buildroot Configuration", NULL);
+ 
+ 	if (getenv("ZCONF_DEBUG"))
+ 		zconfdebug = 1;
+diff --git a/zconf.y b/zconf.y
+index 71bf8bf..6978dc0 100644
+--- a/zconf.y
++++ b/zconf.y
+@@ -502,7 +502,7 @@ void conf_parse(const char *name)
+ 
+ 	sym_init();
+ 	_menu_init();
+-	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
++	rootmenu.prompt = menu_add_prompt(P_MENU, "Buildroot Configuration", NULL);
+ 
+ 	if (getenv("ZCONF_DEBUG"))
+ 		zconfdebug = 1;
