@@ -1,0 +1,13 @@
+diff --git a/merge_config.sh b/merge_config.sh
+index 67d1314..f8ec2c9 100755
+--- a/merge_config.sh
++++ b/merge_config.sh
+@@ -100,7 +100,7 @@ fi
+ 
+ MERGE_LIST=$*
+ SED_CONFIG_EXP="s/^\(# \)\{0,1\}\(CONFIG_[a-zA-Z0-9_]*\)[= ].*/\2/p"
+-TMP_FILE=$(mktemp ./.tmp.config.XXXXXXXXXX)
++TMP_FILE=$(mktemp -t .tmp.config.XXXXXXXXXX)
+ 
+ echo "Using $INITFILE as base"
+ cat $INITFILE > $TMP_FILE
