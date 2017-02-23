@@ -16,7 +16,7 @@ index dd243d2..5b29851 100644
  const char *conf_get_configname(void)
  {
 -	char *name = getenv("KCONFIG_CONFIG");
-+	char *name = getenv("BR2_CONFIG");
++	char *name = getenv("BUILDER_CONFIG");
  
  	return name ? name : ".config";
  }
@@ -29,7 +29,7 @@ index aa483cb..6cbc1bb 100644
  <widget class="GtkWindow" id="window1">
    <property name="visible">True</property>
 -  <property name="title" translatable="yes">Gtk Kernel Configurator</property>
-+  <property name="title" translatable="yes">Gtk Buildroot Configurator</property>
++  <property name="title" translatable="yes">Gtk Builder Configurator</property>
    <property name="type">GTK_WINDOW_TOPLEVEL</property>
    <property name="window_position">GTK_WIN_POS_NONE</property>
    <property name="modal">False</property>
@@ -54,7 +54,7 @@ index 315ce2c..3a687a7 100644
  		res = dialog_yesno(NULL,
  				   _("Do you wish to save your new configuration?\n"
 -				     "(Press <ESC><ESC> to continue kernel configuration.)"),
-+				     "(Press <ESC><ESC> to continue Buildroot configuration.)"),
++				     "(Press <ESC><ESC> to continue Builder configuration.)"),
  				   6, 60);
  	else
  		res = -1;
@@ -67,7 +67,7 @@ index 91b7e6f..af2e49a 100644
  
  ConfigSettings::ConfigSettings()
 -	: QSettings("kernel.org", "qconf")
-+	: QSettings("buildroot.org", "qconf")
++	: QSettings("builder", "qconf")
  {
  }
  
@@ -80,7 +80,7 @@ index 7a4d658..602c3a4 100644
  	sym_init();
  	_menu_init();
 -	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
-+	rootmenu.prompt = menu_add_prompt(P_MENU, "Buildroot Configuration", NULL);
++	rootmenu.prompt = menu_add_prompt(P_MENU, "Builder Configuration", NULL);
  
  	if (getenv("ZCONF_DEBUG"))
  		zconfdebug = 1;
@@ -93,7 +93,7 @@ index 71bf8bf..6978dc0 100644
  	sym_init();
  	_menu_init();
 -	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
-+	rootmenu.prompt = menu_add_prompt(P_MENU, "Buildroot Configuration", NULL);
++	rootmenu.prompt = menu_add_prompt(P_MENU, "Builder Configuration", NULL);
  
  	if (getenv("ZCONF_DEBUG"))
  		zconfdebug = 1;
