@@ -55,7 +55,7 @@ static inline QString qgettext(const QString& str)
 }
 
 ConfigSettings::ConfigSettings()
-	: QSettings("kernel.org", "qconf")
+	: QSettings("builder", "qconf")
 {
 }
 

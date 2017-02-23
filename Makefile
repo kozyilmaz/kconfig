@@ -186,7 +186,15 @@ qconf-cxxobjs	:= qconf.o
 qconf-objs	:= zconf.tab.o
 gconf-objs	:= gconf.o zconf.tab.o
 
-hostprogs-y := conf nconf mconf kxgettext qconf gconf
+hostprogs-y := conf nconf mconf kxgettext
+
+ifeq ($(MAKECMDGOALS),qconf)
+	hostprogs-y += qconf
+endif
+
+ifeq ($(MAKECMDGOALS),gconf)
+	hostprogs-y += gconf
+endif
 
 clean-files	:= qconf.moc .tmp_qtcheck .tmp_gtkcheck
 clean-files	+= zconf.tab.c zconf.lex.c zconf.hash.c gconf.glade.h
@@ -217,7 +225,7 @@ HOSTLOADLIBES_gconf	= `pkg-config --libs gtk+-2.0 gmodule-2.0 libglade-2.0`
 HOSTCFLAGS_gconf.o	= `pkg-config --cflags gtk+-2.0 gmodule-2.0 libglade-2.0` \
                           -Wno-missing-prototypes
 
-HOSTLOADLIBES_mconf   = $(shell $(CONFIG_SHELL) $(check-lxdialog) -ldflags $(HOSTCC))
+HOSTLOADLIBES_mconf   = $(shell $(CONFIG_SHELL) $(check-lxdialog) -ldflags $(HOSTCC) ||echo "-lncurses")
 
 HOSTLOADLIBES_nconf	= $(shell \
 				pkg-config --libs menuw panelw ncursesw 2>/dev/null \
@@ -225,7 +233,7 @@ HOSTLOADLIBES_nconf	= $(shell \
 				|| echo "-lmenu -lpanel -lncurses"  )
 $(obj)/qconf.o: $(obj)/.tmp_qtcheck
 
-ifeq ($(MAKECMDGOALS),xconfig)
+ifeq ($(MAKECMDGOALS),qconf)
 $(obj)/.tmp_qtcheck: $(src)/Makefile
 -include $(obj)/.tmp_qtcheck
 
@@ -254,7 +262,7 @@ endif
 
 $(obj)/gconf.o: $(obj)/.tmp_gtkcheck
 
-ifeq ($(MAKECMDGOALS),gconfig)
+ifeq ($(MAKECMDGOALS),gconf)
 -include $(obj)/.tmp_gtkcheck
 
 # GTK+ needs some extra effort, too...
@@ -282,11 +290,8 @@ $(obj)/zconf.tab.o: $(obj)/zconf.lex.c $(obj)/zconf.hash.c
 
 $(obj)/qconf.o: $(obj)/qconf.moc
 
-quiet_cmd_moc = MOC     $@
-      cmd_moc = $(KC_QT_MOC) -i $< -o $@
-
 $(obj)/%.moc: $(src)/%.h $(obj)/.tmp_qtcheck
-	$(call cmd,moc)
+	$(KC_QT_MOC) -i $< -o $@
 
 # Extract gconf menu items for i18n support
 $(obj)/gconf.glade.h: $(obj)/gconf.glade
